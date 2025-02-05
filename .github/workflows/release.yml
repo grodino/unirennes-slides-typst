@@ -47,9 +47,11 @@ jobs:
           fi
 
       - name: Build package
-        run: |
-          just doc
-          just package out
+        run: just package out
+        # No docs for now
+        # run: |
+        #   just doc
+        #   just package out
 
       - name: Checkout package registry
         uses: actions/checkout@v4

@@ -1,26 +1,18 @@
 # for a description of available keys, see https://github.com/typst/packages/?tab=readme-ov-file#package-format
 
 [package]
-name = ""
+name = "unirennes-slides"
 version = "0.1.0"
 entrypoint = "src/lib.typ"
-authors = []
+authors = ["Augustin Godinot <augustin.godinot@inria.fr"]
 license = "Unlicense"
-description = ""
-homepage = ""
-repository = ""
-keywords = []
-categories = []
-disciplines = []
-# compiler = ""
-exclude = [
-	".github",
-	"docs",
-	"scripts",
-	"tests",
-	".typstignore",
-	"Justfile",
-]
+description = "Unofficial Typst template to create slides using Université de Rennes charter"
+# homepage = ""
+repository = "https://github.com/grodino/unirennes-slides-typst"
+# keywords = []
+# categories = []
+# disciplines = []
+exclude = [".github", "docs", "scripts", "tests", ".typstignore", "Justfile"]
 
 # [template]
 # path = "template"
