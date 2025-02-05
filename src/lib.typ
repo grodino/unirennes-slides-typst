@@ -1,4 +1,4 @@
-#import "@local/polylux:0.3.1": polylux-slide, logic, utils
+#import "@preview/polylux:0.3.1": polylux-slide, logic, utils
 #import "../common/src/colors.typ": *
 
 ////////////////////////////////////////////////////////////////////////////////
