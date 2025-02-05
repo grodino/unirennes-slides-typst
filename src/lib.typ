@@ -1,5 +1,6 @@
 #import "@preview/polylux:0.3.1": polylux-slide, logic, utils
 #import "../common/src/colors.typ": *
+#import "../common/src/colors.typ" as unirennes-colors
 
 ////////////////////////////////////////////////////////////////////////////////
 // GLOBAL THEME INFO                                                          //
@@ -227,7 +228,7 @@
   let meta = file-meta.at(loc)
 
   polylux-slide(
-    appendix: appendix,
+    // appendix: appendix,
     {
       box(
         width: meta.split-size * PRESENTATION-16-9.width,
@@ -256,7 +257,7 @@
 })
 
 #let slide-full(body, appendix: false, fill: white) = polylux-slide(
-  appendix: appendix,
+  // appendix: appendix,
   box(inset: 1em, width: PRESENTATION-16-9.width, height: 100%, fill: fill)[
     #set align(center + horizon)
     #set text(fill: primary.dark)

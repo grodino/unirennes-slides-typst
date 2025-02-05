@@ -1,4 +1,4 @@
-#import "@local/uni-rennes:0.1.0": unirennes-slides, title-slide, slide, slide-full, unirennes-colors, note
+#import "@local/unirennes-slides:0.1.0": unirennes-slides, title-slide, slide, slide-full, unirennes-colors, note
 
 #show: unirennes-slides.with(
   short-authors: [Augustin Godinot],

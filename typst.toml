@@ -14,10 +14,6 @@ repository = "https://github.com/grodino/unirennes-slides-typst"
 # disciplines = []
 exclude = [".github", "docs", "scripts", "tests", ".typstignore", "Justfile"]
 
-# [template]
-# path = "template"
-# entrypoint = "main.typ"
-# thumbnail = "thumbnail.png"
-
-# [tool.mytool]
-# foo = "bar"
+[template]
+path = "template"
+entrypoint = "main.typ"

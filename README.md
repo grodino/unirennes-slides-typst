@@ -1,6 +1,6 @@
 # Uni-Rennes
 
-This template aggregates materials needed to create posters using the [Université de Rennes](https://www.univ-rennes.fr/) graphic [charter](https://charte.univ-rennes.fr/). 
+This template aggregates materials needed to create slides using the [Université de Rennes](https://www.univ-rennes.fr/) graphic [charter](https://charte.univ-rennes.fr/). 
 
 ## License
 
