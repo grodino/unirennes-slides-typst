@@ -1,4 +1,4 @@
-#import "@preview/polylux:0.3.1": polylux-slide, logic, utils
+#import "@preview/polylux:0.4.0": slide as polylux-slide, toolbox
 #import "../common/src/colors.typ": *
 #import "../common/src/colors.typ" as unirennes-colors
 
@@ -12,220 +12,220 @@
 ////////////////////////////////////////////////////////////////////////////////
 // TITLE SLIDE                                                                //
 ////////////////////////////////////////////////////////////////////////////////
-#let title-slide(body) = polylux-slide(
-  locate(loc => {
-    // Displays the title slide. Takes information passed to the theme when it
-    // was initialized
-    // Get the slides metadata
-    if file-meta == none {
-      return "State was not initialized"
-    }
-    let meta = file-meta.at(loc)
+#let title-slide(body) = polylux-slide(context {
+  // Displays the title slide. Takes information passed to the theme when it
+  // was initialized
+  // Get the slides metadata
+  if file-meta == none {
+    return "State was not initialized"
+  }
+  let meta = file-meta.get()
 
-    set text(font: "UniRennes")
+  set text(font: "UniRennes")
 
-    hide(body)
+  hide(body)
 
-    // Main title + logos
+  // Main title + logos
+  block(
+    width: PRESENTATION-16-9.width,
+    height: if meta.people != none {
+      60%
+    } else {
+      100%
+    },
+    // height: 60%,
+    outset: 0em,
+    inset: 0em,
+    breakable: false,
+    stroke: none,
+    spacing: 0em,
+    stack(
+      dir: ltr,
+      if meta.logos != none {
+        block(
+          width: 37%,
+          inset: 1em,
+          columns(
+            2,
+            for logo in meta.logos {
+              logo
+            },
+          ),
+        )
+      },
+      align(
+        center + horizon,
+        text(size: 1.7em, fill: primary.dark)[
+          #text(
+            font: "UniRennes Inline",
+            fill: accent-blue.light.darken(50%),
+            meta.title,
+          )\
+          #text(size: 22pt, style: "oblique", font: "Newsreader", meta.subtitle)
+
+          #text(size: .4em, weight: "regular")[
+            #meta.info
+          ]
+        ],
+      ),
+    ),
+  )
+
+  // People
+  if meta.people != none {
+    set image(width: 2 * 2.4cm)
     block(
       width: PRESENTATION-16-9.width,
-      height: if meta.people != none {
-        60%
-      } else {
-        100%
-      },
-      // height: 60%,
+      height: 40%,
       outset: 0em,
-      inset: 0em,
+      inset: (x: .5em),
       breakable: false,
       stroke: none,
       spacing: 0em,
-      stack(
-        dir: ltr,
-        if meta.logos != none {
-          block(
-            width: 37%,
-            inset: 1em,
-            columns(
-              2,
-              for logo in meta.logos {
-                logo
-              },
-            ),
-          )
-        },
-        align(
-          center + horizon,
-          text(size: 1.7em, fill: primary.dark)[
-            #text(
-              font: "UniRennes Inline",
-              fill: accent-blue.light.darken(50%),
-              meta.title,
-            )\
-            #text(size: 22pt, style: "oblique", font: "Newsreader", meta.subtitle)
+      fill: accent-blue.light.darken(50%),
+      align(
+        center + horizon,
+        for person in meta.people {
+          box(width: 100% / meta.people.len())[
+            #person.last()
+            #place(
+              top + center,
+              circle(radius: 2.4cm, stroke: 6pt + accent-blue.light.darken(50%)),
+            )
 
-            #text(size: .4em, weight: "regular")[
-              #meta.info
-            ]
-          ],
-        ),
+            #v(-15pt)
+            #text(size: 20pt, fill: primary.light, person.first())
+          ]
+        },
       ),
     )
 
-    // People
-    if meta.people != none {
-      set image(width: 2 * 2.4cm)
-      block(
-        width: PRESENTATION-16-9.width,
-        height: 40%,
-        outset: 0em,
-        inset: (x: .5em),
-        breakable: false,
-        stroke: none,
-        spacing: 0em,
-        fill: accent-blue.light.darken(50%),
-        align(
-          center + horizon,
-          for person in meta.people {
-            box(width: 100% / meta.people.len())[
-              #person.last()
-              #place(
-                top + center,
-                circle(radius: 2.4cm, stroke: 6pt + accent-blue.light.darken(50%)),
-              )
-
-              #v(-15pt)
-              #text(size: 20pt, fill: primary.light, person.first())
-            ]
-          },
-        ),
-      )
-
-      // The little seeparator between people and the title
-      place(
-        left + horizon,
-        dx: PRESENTATION-16-9.width / 2 - 6em / 2,
-        dy: 10%,
-        rect(width: 6em, height: .5em, radius: .25em, fill: accent-pink.light),
-      )
-    }
-  }),
-)
+    // The little seeparator between people and the title
+    place(
+      left + horizon,
+      dx: PRESENTATION-16-9.width / 2 - 6em / 2,
+      dy: 10%,
+      rect(width: 6em, height: .5em, radius: .25em, fill: accent-pink.light),
+    )
+  }
+})
 
 ////////////////////////////////////////////////////////////////////////////////
 // UTILS                                                                      //
 ////////////////////////////////////////////////////////////////////////////////
 
 // Displays the title and relevant information in the left banner
-#let displayed-title(title, subtitle: none, vignette: none, appendix: false) = locate(loc => {
-  let meta = file-meta.at(loc)
+#let displayed-title(title, subtitle: none, vignette: none, appendix: false) = context {
+  let meta = file-meta.get()
   set align(bottom)
+  let logo-height = 2em
+  let logo-inset = 10pt
 
-  block(
-    width: 100%,
-    height: 100% - 3cm,
-    inset: 1em,
-    clip: true,
-  )[
-    //////////////////////////////////////////////////////////////////////////
-    // Slide title
-    #set align(top)
-    #text(font: "UniRennes", fill: primary.light, heading(level: 2, title))
+  stack(
+    block(
+      width: 100%,
+      height: 100% - logo-height,
+      inset: 1em,
+      clip: true,
+    )[
+      //////////////////////////////////////////////////////////////////////////
+      // Slide title
+      #set align(top)
+      #text(font: "UniRennes", fill: primary.light, heading(level: 2, title))
 
-    //////////////////////////////////////////////////////////////////////////
-    // Slide subtitle
-    #if subtitle != none {
-      v(1em)
-      text(
-        fill: primary.light,
-        weight: "light",
-        style: "italic",
-        size: 24pt,
-        font: "Newsreader",
-        subtitle,
-      )
-    }
-
-    //////////////////////////////////////////////////////////////////////////
-    // Slide vignette
-    #if vignette != none {
-      set text(fill: primary.light, font: "Newsreader")
-      vignette
-    }
-
-    //////////////////////////////////////////////////////////////////////////
-    // Slide TOC
-    #set align(bottom)
-
-    // Get the current section name
-    #let sections = utils.sections-state.at(loc)
-    #let current-section = none
-
-    // Display the toc only when the first chapter has begun
-    #if sections.len() > 0 {
-      current-section = sections.last().body
-
-      for item in query(heading.where(level: 1, outlined: true), loc) {
-        if item.body == [Appendix] {
-          continue
-        }
-
-        if item.body != current-section {
-          text(fill: primary.light, font: "UniRennes", size: 16pt, item.body)
-        } else {
-          text(
-            fill: primary.light,
-            size: 16pt,
-            font: "UniRennes",
-            weight: "bold",
-            item.body,
-          )
-        }
-        linebreak()
-      }
-    }
-  ]
-
-  block(
-    width: 100%,
-    inset: 10pt,
-    {
-      if meta.logo != none {
-        set align(left + bottom)
-        set text(size: 12pt, fill: primary.light)
-
-        let size = 2em
-
-        stack(
-          dir: ltr,
-          {
-            set image(width: size, height: size)
-            meta.logo
-          },
-          box(height: size, width: 100% - size)[
-            #set align(right + horizon)
-
-            #if appendix == false {
-              logic.logical-slide.display() + "/"
-              numbering("1", logic.logical-slide.final(loc).first())
-            } else {
-              "Appx. " + logic.logical-appendix.display("1") + "/"
-              numbering("1", logic.logical-appendix.final(loc).first())
-            } \
-            //
-            #meta.short-authors
-          ],
+      //////////////////////////////////////////////////////////////////////////
+      // Slide subtitle
+      #if subtitle != none {
+        v(1em)
+        text(
+          fill: primary.light,
+          weight: "light",
+          style: "italic",
+          size: 24pt,
+          font: "Newsreader",
+          subtitle,
         )
       }
-    },
+
+      //////////////////////////////////////////////////////////////////////////
+      // Slide vignette
+      #if vignette != none {
+        set text(fill: primary.light, font: "Newsreader")
+        vignette
+      }
+
+      //////////////////////////////////////////////////////////////////////////
+      // Slide TOC
+      #set align(bottom)
+      #toolbox.all-sections((sections, current-section) => {
+        sections
+          .map(s => (
+            if s == current-section {
+              // Bold text for the current section
+              text(
+                fill: primary.light,
+                size: 16pt,
+                font: "UniRennes",
+                weight: "bold",
+                s.body,
+              )
+            } else if s.body == [Appendix] {
+              // Ignore Appendix sections
+            } else {
+              // Normal text for the rest of the sections
+              text(fill: primary.light, font: "UniRennes", size: 16pt, s.body)
+            } // Line break between each section
+              + linebreak()
+          ))
+          .join()
+      })
+
+    ],
+
+    //////////////////////////////////////////////////////////////////////////
+    // Footer with name, page number and logo
+    block(
+      width: 100%,
+      height: logo-height,
+      inset: logo-inset,
+      {
+        if meta.logo != none {
+          set align(left + bottom)
+          set text(size: 12pt, fill: primary.light)
+
+          let size = 2em
+
+          stack(
+            dir: ltr,
+            {
+              set image(width: size, height: size)
+              meta.logo
+            },
+            box(height: size, width: 100% - size)[
+              #set align(right + horizon)
+
+              #if appendix == false {
+                toolbox.slide-number + "/"
+                toolbox.last-slide-number
+              } else {
+                "Appx. " + logic.logical-appendix.display("1") + "/"
+                numbering("1", logic.logical-appendix.final(loc).first())
+              } \
+              //
+              #meta.short-authors
+            ],
+          )
+        }
+      },
+    ),
   )
-})
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // SLIDES DECLARATIONS                                                        //
 ////////////////////////////////////////////////////////////////////////////////
-#let slide(title: none, subtitle: none, vignette: none, appendix: false, body) = locate(loc => {
-  let meta = file-meta.at(loc)
+#let slide(title: none, subtitle: none, vignette: none, appendix: false, body) = context {
+  let meta = file-meta.get()
 
   polylux-slide(
     // appendix: appendix,
@@ -254,7 +254,7 @@
       ]
     },
   )
-})
+}
 
 #let slide-full(body, appendix: false, fill: white) = polylux-slide(
   // appendix: appendix,
@@ -323,7 +323,7 @@
   //  - level 3- is used inside the slides
 
   // Hide level 1 headings but keep them in the TOC
-  show heading.where(level: 1): it => utils.register-section(it.body)
+  show heading.where(level: 1): it => toolbox.register-section(it.body)
 
   // Heading font properties
   show heading.where(level: 2): set text(font: "UniRennes", size: 28pt)
