@@ -1,4 +1,5 @@
-#import "@local/unirennes-slides:0.1.0": unirennes-slides, title-slide, slide, slide-full, unirennes-colors, note
+// #import "@local/unvirennes-slides:0.2.0": unirennes-slides, title-slide, slide, slide-full, unirennes-colors, note
+#import "../src/lib.typ": unirennes-slides, title-slide, slide, slide-full, unirennes-colors, note
 
 #show: unirennes-slides.with(
   short-authors: [Augustin Godinot],
@@ -24,11 +25,18 @@
 
 #title-slide[]
 
+= This is is the section title
 
 #slide(title: [TODO], subtitle: [Automatically put the header(level:2) here?])[
-  = This is is the section title
 
   == This is the slide title
 
   The section title is not included in the slide unless it is asked for.
+]
+
+
+= This is an other section
+
+#slide(title: [Something])[
+  == This is something else
 ]
