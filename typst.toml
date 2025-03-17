@@ -2,7 +2,7 @@
 
 [package]
 name = "unirennes-slides"
-version = "0.1.0"
+version = "0.2.0"
 entrypoint = "src/lib.typ"
 authors = ["Augustin Godinot <augustin.godinot@inria.fr"]
 license = "Unlicense"
