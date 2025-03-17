@@ -8,111 +8,55 @@
 #let file-meta = state("file-meta")
 #let is-appendix = state("is-appendix", false)
 #let PRESENTATION-16-9 = (width: 841.89pt, height: 473.56pt)
-
-////////////////////////////////////////////////////////////////////////////////
-// TITLE SLIDE                                                                //
-////////////////////////////////////////////////////////////////////////////////
-#let title-slide(body) = polylux-slide(context {
-  // Displays the title slide. Takes information passed to the theme when it
-  // was initialized
-  // Get the slides metadata
-  if file-meta == none {
-    return "State was not initialized"
-  }
-  let meta = file-meta.get()
-
-  set text(font: "UniRennes")
-
-  hide(body)
-
-  // Main title + logos
-  block(
-    width: PRESENTATION-16-9.width,
-    height: if meta.people != none {
-      60%
-    } else {
-      100%
-    },
-    // height: 60%,
-    outset: 0em,
-    inset: 0em,
-    breakable: false,
-    stroke: none,
-    spacing: 0em,
-    stack(
-      dir: ltr,
-      if meta.logos != none {
-        block(
-          width: 37%,
-          inset: 1em,
-          columns(
-            2,
-            for logo in meta.logos {
-              logo
-            },
-          ),
-        )
-      },
-      align(
-        center + horizon,
-        text(size: 1.7em, fill: primary.dark)[
-          #text(
-            font: "UniRennes Inline",
-            fill: accent-blue.light.darken(50%),
-            meta.title,
-          )\
-          #text(size: 22pt, style: "oblique", font: "Newsreader", meta.subtitle)
-
-          #text(size: .4em, weight: "regular")[
-            #meta.info
-          ]
-        ],
-      ),
-    ),
-  )
-
-  // People
-  if meta.people != none {
-    set image(width: 2 * 2.4cm)
-    block(
-      width: PRESENTATION-16-9.width,
-      height: 40%,
-      outset: 0em,
-      inset: (x: .5em),
-      breakable: false,
-      stroke: none,
-      spacing: 0em,
-      fill: accent-blue.light.darken(50%),
-      align(
-        center + horizon,
-        for person in meta.people {
-          box(width: 100% / meta.people.len())[
-            #person.last()
-            #place(
-              top + center,
-              circle(radius: 2.4cm, stroke: 6pt + accent-blue.light.darken(50%)),
-            )
-
-            #v(-15pt)
-            #text(size: 20pt, fill: primary.light, person.first())
-          ]
-        },
-      ),
-    )
-
-    // The little seeparator between people and the title
-    place(
-      left + horizon,
-      dx: PRESENTATION-16-9.width / 2 - 6em / 2,
-      dy: 10%,
-      rect(width: 6em, height: .5em, radius: .25em, fill: accent-pink.light),
-    )
-  }
-})
+#let accent-dark = accent-blue.light.darken(50%)
 
 ////////////////////////////////////////////////////////////////////////////////
 // UTILS                                                                      //
 ////////////////////////////////////////////////////////////////////////////////
+
+// Display the pictures of people with their names above/below.
+// For now only supports one row.
+#let display-people(people, names-location: top, image-radius: 2.8em) = {
+  set image(width: 2 * image-radius, height: 2 * image-radius)
+  set text(size: 18pt)
+
+  assert(names-location in (top, bottom), message: "People names can only be at above or below their pictures")
+
+  grid(
+    row-gutter: 1em,
+    column-gutter: 1fr,
+    align: center + horizon,
+    columns: people.len(),
+    ..if names-location == top {
+      for name in people.keys() {
+        (name,)
+      }
+    },
+    ..for img in people.values() {
+      if img != none {
+        (
+          // Put the picture of the person
+          img // Draw a blue circle around the picture to have nicer edges
+            + place(
+              bottom + center,
+              circle(
+                radius: image-radius,
+                inset: 0pt,
+                outset: 0pt,
+                stroke: 4pt + accent-dark,
+              ),
+            ),
+        )
+      } else { ([],) }
+    },
+    // Add the names
+    ..if names-location == bottom {
+      for name in people.keys() {
+        (name,)
+      }
+    },
+  )
+}
 
 // Displays the title and relevant information in the left banner
 #let displayed-title(title, subtitle: none, vignette: none, appendix: false) = context {
@@ -221,6 +165,95 @@
   )
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+// TITLE SLIDE                                                                //
+////////////////////////////////////////////////////////////////////////////////
+#let title-slide(body) = polylux-slide(context {
+  // Displays the title slide. Takes information passed to the theme when it
+  // was initialized
+  // Get the slides metadata
+  if file-meta == none {
+    return "State was not initialized"
+  }
+  let meta = file-meta.get()
+
+  set text(font: "UniRennes")
+  hide(body)
+
+  // Main title + logos
+  block(
+    width: PRESENTATION-16-9.width,
+    height: if meta.people != none {
+      60%
+    } else {
+      100%
+    },
+    // height: 60%,
+    outset: 0em,
+    inset: 0em,
+    breakable: false,
+    stroke: none,
+    spacing: 0em,
+    stack(
+      dir: ltr,
+      if meta.logos != none {
+        block(
+          width: 37%,
+          inset: 1em,
+          columns(
+            2,
+            for logo in meta.logos {
+              logo
+            },
+          ),
+        )
+      },
+      align(
+        center + horizon,
+        text(size: 1.7em, fill: primary.dark)[
+          #text(
+            font: "UniRennes Inline",
+            fill: accent-dark,
+            meta.title,
+          )\
+          #text(size: 22pt, style: "oblique", font: "Newsreader", meta.subtitle)
+
+          #text(size: .4em, weight: "regular")[
+            #meta.info
+          ]
+        ],
+      ),
+    ),
+  )
+
+  // People
+  if meta.people != none {
+    set image(width: 2 * 2.4cm)
+    set text(fill: white)
+    block(
+      width: PRESENTATION-16-9.width,
+      height: 40%,
+      outset: 0em,
+      inset: (x: 1em),
+      breakable: false,
+      stroke: none,
+      spacing: 0em,
+      fill: accent-dark,
+      align(center + horizon, display-people(meta.people)),
+    )
+
+    // The little seeparator between people and the title
+    place(
+      left + horizon,
+      dx: PRESENTATION-16-9.width / 2 - 6em / 2,
+      dy: 10%,
+      rect(width: 6em, height: .5em, radius: .25em, fill: accent-pink.light),
+    )
+  }
+})
+
+
 ////////////////////////////////////////////////////////////////////////////////
 // SLIDES DECLARATIONS                                                        //
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +269,7 @@
         outset: 0em,
         baseline: 0em,
         stroke: none,
-        fill: accent-blue.light.darken(50%),
+        fill: accent-dark,
         displayed-title(title, subtitle: subtitle, vignette: vignette, appendix: appendix),
       )
       box(
